@@ -25,9 +25,10 @@ export class ProductItemDetailComponent implements OnInit {
   }
 
   getProduct(): void {
-//TODO: Get the product description
-      });
-  }
+  // Getting product from back-end
+  this.productService.getProduct(this.getPageId()).subscribe(response => this.product = response);
+
+  };
 
   addToCart(product: Product, amount: any): void {
     const cartProductPayload = {

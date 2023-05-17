@@ -27,10 +27,11 @@ export class CartComponent implements OnInit {
 
   getCartTotal(cart: any): number {
     let sum = 0;
+    for (var product of cart) {
+      sum += product.amount * product.price;
+    }
 
-   //TODO Sum up total cart price
-
-    return
+    return sum;
   }
 
   modelChanged(product: any): void {
@@ -52,7 +53,8 @@ export class CartComponent implements OnInit {
     order.name = this.customerName;
     order.price = this.total;
 
-    //TODO: Submit order - call the service
+    // Submit order
+    this.cartService.submitOrder(order);
     this.cartService.clearCart();
     this.cartProducts = [];
     this.router.navigate(['/confirmation', { customerName: this.customerName, total: this.total }]);

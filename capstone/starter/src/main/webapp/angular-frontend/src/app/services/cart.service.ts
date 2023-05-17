@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Order } from '../models/Order';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
   cartProducts: any[] = [];
+  private baseUrl = 'http://localhost:8080/orders'
 
   constructor(private http: HttpClient) { }
 
@@ -16,11 +16,23 @@ export class CartService {
   }
 
   addToCart(product: any, amount: any) {
-    //TODO: Add item to the cart
+
+    let existingProduct = null;
+    // Checking if the product was already in the cart
+    for (var cartProduct of this.cartProducts) {
+      if (cartProduct.id === product.id) {
+        existingProduct = cartProduct;
+        existingProduct.amount += parseInt(amount);
+        break;
+      }
     }
 
-    existingProduct.amount += parseInt(amount);
-
+    // If it's still null; this means it's not in the cart
+    if (existingProduct === null) {
+      existingProduct = product;
+      this.cartProducts.push(existingProduct);
+    }
+    console.log(this.cartProducts);
     alert('Added to cart!');
   }
 
@@ -35,7 +47,15 @@ export class CartService {
     return this.cartProducts;
   }
 
-  submitOrder(order: any): Observable<any> {
-  //Submit the order information the API
+  submitOrder(order: any) {
+    // Submit the order information the API
+    this.http.post(`${this.baseUrl}/submit`, order, { headers: { Authorization: 'Basic dWRhY2l0eTpwYXNzd29yZA=='}}).subscribe(
+      (response) => {
+        console.log('POST request successful', response);
+      },
+      (error) => {
+        console.error('Error in POST request', error);
+      }
+    )
   }
 }

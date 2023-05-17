@@ -8,10 +8,14 @@ import { Product } from '../models/Product';
 })
 export class ProductService {
 
-
+  private baseUrl = 'http://localhost:8080/api'
   constructor(private http: HttpClient) { }
 
+  getProduct(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/product/${id}`, { headers: { Authorization: 'Basic dWRhY2l0eTpwYXNzd29yZA=='}});
+  }
+
   getProducts(): Observable<Product[]> {
-  //TODO: Fetch the product list from the API
+  return this.http.get<Product[]>(`${this.baseUrl}/allProducts`, { headers: { Authorization: 'Basic dWRhY2l0eTpwYXNzd29yZA=='}});
   }
 }
